@@ -1,43 +1,37 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
+apiVersion: apps/v1  
+kind: Deployment  
+metadata:  
   name: nfs-client-provisioner
----
-kind: Deployment
-apiVersion: extensions/v1beta1
-metadata:
-  name: nfs-client-provisioner
-  namespace: nfs-client-provisioner
-spec:
+  labels:
+    app: nfs-client-provisioner
+spec:  
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
   template:
     metadata:
       labels:
         app: nfs-client-provisioner
     spec:
-      nodeSelector:
-        beta.kubernetes.io/arch: amd64
       serviceAccountName: nfs-client-provisioner
       containers:
         - name: nfs-client-provisioner
-          image: quay.io/external_storage/nfs-client-provisioner:latest
+          image: quay.io/external_storage/nfs-client-provisioner-arm:latest
           volumeMounts:
             - name: nfs-client-root
               mountPath: /persistentvolumes
           env:
             - name: PROVISIONER_NAME
-              value: fuseim.pri/ifs
+              value: nfs-storage
             - name: NFS_SERVER
               value: 10.0.0.203
-            # 共有ディレクトリ
             - name: NFS_PATH
-              value: /export/nfs/
+              value: /export/nfs
       volumes:
         - name: nfs-client-root
           nfs:
-            # NFS Serverのホスト指定
             server: 10.0.0.203
-            # 共有ディレクトリ
-            path: /export/nfs/
+            path: /export/nfs
