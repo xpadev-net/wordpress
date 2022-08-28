@@ -18,6 +18,8 @@ metadata:
   name: mysql-pv-claim
   labels:
     app: wordpress
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "nfs-client"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -31,6 +33,8 @@ metadata:
   name: wordpress-mysql
   labels:
     app: wordpress
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "nfs-client"
 spec:
   selector:
     matchLabels:
