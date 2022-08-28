@@ -22,10 +22,10 @@ metadata:
     volume.beta.kubernetes.io/storage-class: "nfs-client"
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
